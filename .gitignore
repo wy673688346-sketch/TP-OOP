@@ -1,0 +1,9 @@
+# Fichiers cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Script d'installation conda (gros fichier, à ignorer)
+Miniconda3-latest-Linux-x86_64.sh
+
