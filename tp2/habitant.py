@@ -14,6 +14,10 @@ class Habitant(ABC):
         self._animaux = {} if animaux is None else animaux
         self.age = age
 
+    def __str__(self):
+        """Representation textuelle d'un habitant."""
+        return f"{self.get_nom()}, {self.get_age()} ans, habite a {self.get_adresse()}"
+
     @property
     def age(self):
         """Getter de age."""

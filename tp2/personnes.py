@@ -1,6 +1,11 @@
-"""Module definissant les classes derivees Adulte et Enfant."""
+"""Module definissant les classes derivees Adulte et Enfant et le polymorphisme."""
 
 from habitant import Habitant
+
+
+# Explication (Exercice 8, question 3) :
+# Rendre la methode abstraite garantit a l'instanciation que chaque sous-classe
+# implemente sa version, empechant tout appel silencieux a une fonction vide.
 
 
 class Adulte(Habitant):
@@ -33,25 +38,19 @@ class Enfant(Habitant):
         return "Erreur: un enfant ne peut pas calculer sa retraite"
 
 
-if __name__ == "__main__":
-    try:
-        # pylint: disable=abstract-class-instantiated
-        Habitant("Test", 20, "Rue X")
-        assert False, "L'instanciation directe de Habitant aurait du echouer"
-    except TypeError:
-        pass
+def affichage(habitant: Habitant):
+    """Affiche un habitant via le polymorphisme sans verification de type."""
+    print(str(habitant))
 
+
+if __name__ == "__main__":
     adulte = Adulte("Dupont", "Marie", 35, "Rue A")
     enfant = Enfant("Martin", "Lucas", 12, "Rue B")
 
-    assert isinstance(adulte, Habitant)
-    assert adulte.calcul_nombre_annee_avant_retraite() == 27
-    assert "enfant" in enfant.calcul_nombre_annee_avant_retraite()
+    assert str(adulte) == "Marie Dupont, 35 ans, habite a Rue A"
+    assert str(enfant) == "Lucas Martin, 12 ans, habite a Rue B"
 
-    try:
-        Enfant("Oups", "Jean", 25, "Rue C")
-        assert False, "une ValueError aurait du etre levee"
-    except ValueError:
-        pass
+    affichage(adulte)
+    affichage(enfant)
 
-    print("Exercice 7 valide avec succes !")
+    print("Exercice 8 valide avec succes !")
