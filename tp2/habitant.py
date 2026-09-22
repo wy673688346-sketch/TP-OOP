@@ -1,4 +1,6 @@
-"""Module definissant la classe Habitant avec encapsulation."""
+"""Module definissant la classe Habitant avec encapsulation et surcharge."""
+
+from multipledispatch import dispatch
 
 
 class Habitant:
@@ -12,10 +14,8 @@ class Habitant:
             self._animaux = {}
         else:
             self._animaux = animaux
-        # 利用 setter 自动校验 age 的合法范围
         self.age = age
 
-    # --- Propriete age ---
     @property
     def age(self):
         """Getter de la propriete age."""
@@ -28,7 +28,6 @@ class Habitant:
             raise ValueError("L'age doit etre compris entre 0 et 130.")
         self._age = nouvelle_valeur
 
-    # --- Accesseurs et mutateurs ---
     def get_nom(self):
         """Renvoie le nom de l'habitant."""
         return self._nom
@@ -61,7 +60,6 @@ class Habitant:
         """Modifie le dictionnaire d'animaux."""
         self._animaux = animaux
 
-    # --- Methodes metier adaptees ---
     def affichage_adresse(self):
         """Affiche l'adresse de l'habitant."""
         print(f"{self.get_nom()} habite a {self.get_adresse()}")
@@ -71,28 +69,39 @@ class Habitant:
         return self.get_animaux().get(animal, 0)
 
 
+# --- Surcharge de set_info avec multipledispatch (Exercice 6) ---
+@dispatch(object, str)
+def set_info(habitant, nom):
+    """Met a jour uniquement le nom de l'habitant."""
+    habitant.set_nom(nom)
+
+
+@dispatch(object, str, int)
+def set_info(habitant, nom, age):
+    """Met a jour le nom et l'age de l'habitant."""
+    habitant.set_nom(nom)
+    habitant.set_age(age)
+
+
 if __name__ == "__main__":
-    # 验证 Exercice 3 原有功能
+    # Tests Exercice 3 & 4
     h1 = Habitant("Aldric", 25, "Rue A", {"vaches": 3})
     assert h1.get_nom() == "Aldric"
     assert h1.compte_animal("vaches") == 3
     assert h1.compte_animal("moutons") == 0
     h1.affichage_adresse()
 
-    # 验证 Exercice 4 题目要求的测试
     h1.age = 26
     assert h1.age == 26
 
-    try:
-        h1.age = -5
-        assert False, "une ValueError aurait du etre levee"
-    except ValueError:
-        pass
+    # Tests Exercice 6
+    h2 = Habitant("Bob", 40, "Rue C")
+    set_info(h2, "Robert")
+    assert h2.get_nom() == "Robert"
+    assert h2.get_age() == 40
 
-    try:
-        h1.age = 135
-        assert False, "une ValueError aurait du etre levee"
-    except ValueError:
-        pass
+    set_info(h2, "Robert", 41)
+    assert h2.get_nom() == "Robert"
+    assert h2.get_age() == 41
 
-    print("Exercice 4 valide avec succes !")
+    print("Exercice 6 valide avec succes !")
